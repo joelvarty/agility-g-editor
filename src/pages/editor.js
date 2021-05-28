@@ -1,4 +1,10 @@
-import React from 'react';
+/* eslint-disable react/jsx-indent-props */
+/* eslint-disable react/jsx-indent */
+/* eslint-disable semi */
+/* eslint-disable indent */
+/* eslint-disable quotes */
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from 'react';
 import types from '../data/types';
 import { changeType } from '../globals/fake-data';
 
@@ -7,106 +13,95 @@ import './editor.scss';
 const { data, editPost, domReady } = window.wp;
 
 
-class Editor extends React.Component {
-  constructor (props) {
-    super(props);
+const Editor = () => {
 
-    let type = window.location.pathname.replace(/\//g, '');
-    type = type.slice(0, -1);
+	const [postType, setPostType] = useState("page");
 
-    this.state = {
-      postType: type || 'page',
-    };
-  }
+	useEffect(() => {
+		const settings = {
+			alignWide: true,
+			availableTemplates: [],
+			allowedBlockTypes: true,
+			disableCustomColors: false,
+			disableCustomFontSizes: false,
+			disablePostFormats: false,
+			titlePlaceholder: 'Add title',
+			bodyPlaceholder: 'Insert your custom block',
+			isRTL: false,
+			autosaveInterval: 3,
+			style: [],
+			imageSizes: [],
+			richEditingEnabled: true,
+			postLock: {
+				isLocked: false,
+			},
+			postLockUtils: {
+				nonce: '123456789',
+			},
+			enableCustomFields: true,
+			mediaLibrary: true,
+			__experimentalBlockPatterns: [],
+			__experimentalBlockPatternCategories: [],
+			__experimentalDisableCustomLineHeight: [],
+			__experimentalDisableCustomUnits: [],
+			__experimentalEnableLinkColor: [],
+		};
 
-  componentDidMount () {
-    const { postType } = this.state;
+		// Disable publish sidebar
+		data.dispatch('core/editor').disablePublishSidebar();
 
-    const settings = {
-      alignWide: true,
-      availableTemplates: [],
-      allowedBlockTypes: true,
-      disableCustomColors: false,
-      disableCustomFontSizes: false,
-      disablePostFormats: false,
-      titlePlaceholder: 'Add title',
-      bodyPlaceholder: 'Insert your custom block',
-      isRTL: false,
-      autosaveInterval: 3,
-      style: [],
-      imageSizes: [],
-      richEditingEnabled: true,
-      postLock: {
-        isLocked: false,
-      },
-      postLockUtils: {
-        nonce: '123456789',
-      },
-      enableCustomFields: true,
-      mediaLibrary: true,
-      __experimentalBlockPatterns: [],
-      __experimentalBlockPatternCategories: [],
-      __experimentalDisableCustomLineHeight: [],
-      __experimentalDisableCustomUnits: [],
-      __experimentalEnableLinkColor: [],
-    };
+		// Disable tips
+		data.dispatch('core/nux').disableTips();
 
-    // Disable publish sidebar
-    data.dispatch('core/editor').disablePublishSidebar();
+		// Initialize the editor
+		window._wpLoadBlockEditor = new Promise(resolve => {
+			domReady(() => {
+				resolve(editPost.initializeEditor('editor', postType, 1, settings, {}));
+			});
+		});
+	}, [])
 
-    // Disable tips
-    data.dispatch('core/nux').disableTips();
 
-    // Initialize the editor
-    window._wpLoadBlockEditor = new Promise(resolve => {
-      domReady(() => {
-        resolve(editPost.initializeEditor('editor', postType, 1, settings, {}));
-      });
-    });
-  }
 
-  resetLocalStorage = ev => {
-    ev.preventDefault();
+	const resetLocalStorage = ev => {
+		ev.preventDefault();
 
-    localStorage.removeItem('g-editor-page');
-    sessionStorage.removeItem('wp-autosave-block-editor-post-1');
-    window.location.reload();
-  };
+		localStorage.removeItem('g-editor-page');
+		sessionStorage.removeItem('wp-autosave-block-editor-post-1');
+		window.location.reload();
+	};
 
-  changePostType = (ev, type) => {
-    ev.preventDefault();
-    // update postType in localStorage before reload the editor
-    const slug = type.slice(0, -1);
-    changeType(slug);
+	const changePostType = (ev, type) => {
+		ev.preventDefault();
+		// update postType in localStorage before reload the editor
+		const slug = type.slice(0, -1);
+		changeType(slug);
 
-    window.location.replace(type);
-  };
+		window.location.replace(type);
+	};
 
-  render () {
-    const { postType } = this.state;
+	return (
+		<React.Fragment>
+			<div className="editor-nav">
+				{/* {
+					['post', 'page'].map(type => {
+						return (
+							<button
+								key={type}
+								className={`components-button ${type === postType ? 'is-primary' : ''}`}
+								onClick={ev => changePostType(ev, types[type].rest_base)}
+							>{types[type].name}</button>
+						);
+					})
+				}
 
-    return (
-      <React.Fragment>
-        <div className="editor-nav">
-          {
-            ['post', 'page'].map(type => {
-              return (
-                <button
-                  key={ type }
-                  className={ `components-button ${type === postType ? 'is-primary' : ''}` }
-                  onClick={ ev => this.changePostType(ev, types[type].rest_base) }
-                >{ types[type].name }</button>
-              );
-            })
-          }
+				<button type="button" className="components-button is-tertiary"
+					onClick={resetLocalStorage}>Clear page and reload</button> */}
+			</div>
+			<div id="editor" className="gutenberg__editor"></div>
+		</React.Fragment>
+	);
 
-          <button type="button" className="components-button is-tertiary"
-            onClick={ this.resetLocalStorage }>Clear page and reload</button>
-        </div>
-        <div id="editor" className="gutenberg__editor"></div>
-      </React.Fragment>
-    );
-  }
 }
 
 export default Editor;
