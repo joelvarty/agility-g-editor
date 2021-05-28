@@ -1,3 +1,4 @@
+/* eslint-disable spaced-comment */
 /* eslint-disable react/jsx-indent-props */
 /* eslint-disable react/jsx-indent */
 /* eslint-disable semi */
