@@ -81,7 +81,10 @@ window.addEventListener("message", function (e) {
 }, false);
 
 export function getPage(type = 'page') {
-	return JSON.parse(localStorage.getItem('g-editor-page')) || pages[type];
+	const obj = JSON.parse(localStorage.getItem('g-editor-page')) || pages[type];
+	localStorage.removeItem('g-editor-page');
+	return obj;
+
 }
 
 export function savePage(data, type = 'page') {
