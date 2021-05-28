@@ -1,3 +1,5 @@
+/* eslint-disable brace-style */
+/* eslint-disable comma-dangle */
 /* eslint-disable quotes */
 /* eslint-disable space-before-function-paren */
 /* eslint-disable spaced-comment */
