@@ -53,12 +53,25 @@ const Editor = () => {
 		// Disable tips
 		data.dispatch('core/nux').disableTips();
 
-		// Initialize the editor
-		window._wpLoadBlockEditor = new Promise(resolve => {
-			domReady(() => {
-				resolve(editPost.initializeEditor('editor', postType, 1, settings, {}));
-			});
-		});
+		window.addEventListener("message", function (e) {
+
+			//only care about these messages
+			if (e.data.type === 'setInitialValueForCustomField') {
+				const json = e.data.message;
+				console.log("data from Agility", json);
+				localStorage.setItem('g-editor-page', json);
+
+				// Initialize the editor
+				window._wpLoadBlockEditor = new Promise(resolve => {
+					domReady(() => {
+						resolve(editPost.initializeEditor('editor', postType, 1, settings, {}));
+					});
+				});
+			}
+		}, false);
+
+
+
 	}, [])
 
 

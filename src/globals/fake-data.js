@@ -71,15 +71,7 @@ export const pages = {
 	},
 };
 
-window.addEventListener("message", function (e) {
 
-	//only care about these messages
-	if (e.data.type === 'setInitialValueForCustomField') {
-		const json = e.data.message;
-console.log("data from Agility", json);
-		localStorage.setItem('g-editor-page', json);
-	}
-}, false);
 
 export function getPage(type = 'page') {
 
