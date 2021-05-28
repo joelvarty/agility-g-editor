@@ -16,6 +16,7 @@ export default [
     path: '/wp/v2/pages',
     method: '*',
     handler () {
+      console.log('ROUTE /wp/v2/pages');
       return [ getPage() ];
     },
   },
@@ -27,6 +28,7 @@ export default [
     method: ['POST', 'PUT'],
     handler ({ payload }) {
       savePage(payload);
+      console.log('ROUTE /wp/v2/pages/id/autosaves');
       return getPage();
     },
   },
@@ -45,6 +47,7 @@ export default [
     ],
     method: '*',
     handler () {
+      console.log('ROUTE /wp/v2/pages/id/autosaves 2');
       return getPage();
     },
   },

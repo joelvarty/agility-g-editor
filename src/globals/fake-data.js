@@ -76,12 +76,15 @@ window.addEventListener("message", function (e) {
 	//only care about these messages
 	if (e.data.type === 'setInitialValueForCustomField') {
 		const json = e.data.message;
+console.log("data from Agility", json);
 		localStorage.setItem('g-editor-page', json);
 	}
 }, false);
 
 export function getPage(type = 'page') {
+
 	const obj = JSON.parse(localStorage.getItem('g-editor-page')) || pages[type];
+console.log("GET PAGE", obj);
 	localStorage.removeItem('g-editor-page');
 	return obj;
 
